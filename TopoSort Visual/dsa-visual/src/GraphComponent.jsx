@@ -1,5 +1,6 @@
 import React from 'react';
 import { Graph } from 'react-d3-graph';
+import "./style.css";
 
 // Convert graph data to react-d3-graph format
 const graphDataFormatter = (graph, indegrees) => {
@@ -26,15 +27,17 @@ function GraphComponent({ graph, indegrees }) {
     nodeHighlightBehavior: true,
     node: {
       color: 'lightblue',
-      size: 600,
+      size: 800,
       highlightStrokeColor: 'blue',
+      fontSize: '20',
+      highlightFontSize: '20',
     },
     link: {
       highlightColor: 'lightblue',
     },
     directed: true,
-    height: 400,
-    width: 800,
+    height: 350,
+    width: 600,
     // Enable automatic graph centering on render
     d3: {
       gravity: -200,  // This ensures nodes don't overlap
@@ -46,8 +49,7 @@ function GraphComponent({ graph, indegrees }) {
   
 
   return (
-    <div>
-      <h3>Graph Visualization</h3>
+    <div className='inner-container'>
       <Graph
         id="graph-id"
         data={graphData}

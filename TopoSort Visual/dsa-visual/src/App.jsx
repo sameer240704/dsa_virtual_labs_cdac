@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import './style.css';
 import GraphComponent from './GraphComponent';
 import TopoSortArrayComponent from './TopoSortArrayComponent';
 import QuestionComponent from './QuestionComponent';
@@ -48,17 +49,13 @@ function App() {
       return;
     }
 
-    // Remove node from the graph and update links
     const newGraph = updateLinksAfterNodeRemoval(graph, node);
-
-    // Update indegrees
     const newIndegrees = { ...indegrees };
     Object.values(graph[node]).forEach(edge => {
       newIndegrees[edge]--;
     });
     delete newIndegrees[node];
 
-    // Update topo sort
     setTopoSort([...topoSort, node]);
     setGraph(newGraph);
     setIndegrees(newIndegrees);
@@ -66,8 +63,11 @@ function App() {
   };
 
   return (
-    <div>
-      <GraphComponent graph={graph} indegrees={indegrees} />
+    <div className="app-container">
+      <h2 className='main-heading'>Topological Sort Visualizer</h2>
+      <div className="graph-container">
+        <GraphComponent graph={graph} indegrees={indegrees} />
+      </div>
       <TopoSortArrayComponent topoSort={topoSort} />
       <QuestionComponent onNodeSelect={handleNodeSelection} nodes={Object.keys(indegrees)} />
       {errorMessage && <ErrorComponent message={errorMessage} />}
