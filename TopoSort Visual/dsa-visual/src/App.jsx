@@ -4,6 +4,7 @@ import GraphComponent from './GraphComponent';
 import TopoSortArrayComponent from './TopoSortArrayComponent';
 import QuestionComponent from './QuestionComponent';
 import ErrorComponent from './ErrorComponent';
+import TheoryModal from './TheoryModal';
 
 const initialGraph = {
   5: [0, 2],
@@ -42,6 +43,7 @@ function App() {
   const [indegrees, setIndegrees] = useState(calculateIndegrees(initialGraph));
   const [topoSort, setTopoSort] = useState([]);
   const [errorMessage, setErrorMessage] = useState('');
+  const [isModalOpen, setIsModalOpen] = useState(true);
 
   const handleNodeSelection = (node) => {
     if (indegrees[node] !== 0) {
@@ -62,8 +64,20 @@ function App() {
     setErrorMessage('');
   };
 
+  const closeModal = () => {
+    setIsModalOpen(false);
+  };
+
+  const openModal = () => {
+    setIsModalOpen(true);
+  };
+
   return (
     <div className="app-container">
+
+      {isModalOpen && <TheoryModal onClose={closeModal} />}
+      <button className="info-button" onClick={openModal}>?</button>
+
       <h2 className='main-heading'>Topological Sort Visualizer</h2>
       <div className="graph-container">
         <GraphComponent graph={graph} indegrees={indegrees} />
