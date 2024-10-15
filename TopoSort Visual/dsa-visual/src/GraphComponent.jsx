@@ -3,24 +3,26 @@ import { Graph } from 'react-d3-graph';
 import "./style.css";
 
 // Convert graph data to react-d3-graph format
-const graphDataFormatter = (graph, indegrees) => {
+const graphDataFormatter = (graph, indegrees, highlightedNode, highlightedEdges) => {
   const nodes = Object.keys(graph).map(node => ({
     id: node.toString(),  // Ensure the ID is a string
     label: `Node ${node} (Indegree: ${indegrees[node]})`,
+    color: highlightedNode === node ? 'red' : 'lightblue',
   }));
 
   const links = Object.keys(graph).flatMap(source => 
     graph[source].map(target => ({
       source: source.toString(),  // Ensure source is a string
-      target: target.toString()   // Ensure target is a string
+      target: target.toString(),   // Ensure target is a string
+      color: highlightedEdges.includes(target) ? 'red' : 'lightblue',
     }))
   );
 
   return { nodes, links };
 };
 
-function GraphComponent({ graph, indegrees }) {
-  const graphData = graphDataFormatter(graph, indegrees);
+function GraphComponent({ graph, indegrees, highlightedNode, highlightedEdges }) {
+  const graphData = graphDataFormatter(graph, indegrees, highlightedNode, highlightedEdges);
 
   // Graph configuration for react-d3-graph
   const config = {

@@ -44,12 +44,19 @@ function App() {
   const [topoSort, setTopoSort] = useState([]);
   const [errorMessage, setErrorMessage] = useState('');
   const [isModalOpen, setIsModalOpen] = useState(true);
+  const [highlightedNode, setHighlightedNode] = useState(null);
+  const [highlightedEdges, setHighlightedEdges] = useState([]);
 
-  const handleNodeSelection = (node) => {
+  const handleNodeSelection = async (node) => {
     if (indegrees[node] !== 0) {
       setErrorMessage(`Incorrect choice! Node ${node} has indegree greater than 0.`);
       return;
     }
+
+    setHighlightedNode(node);
+    setHighlightedEdges(graph[node]);
+
+    await new Promise(resolve => setTimeout(resolve, 1000));
 
     const newGraph = updateLinksAfterNodeRemoval(graph, node);
     const newIndegrees = { ...indegrees };
@@ -62,6 +69,8 @@ function App() {
     setGraph(newGraph);
     setIndegrees(newIndegrees);
     setErrorMessage('');
+    setHighlightedNode(null); // Reset highlighted node
+    setHighlightedEdges([]);
   };
 
   const closeModal = () => {
@@ -80,7 +89,7 @@ function App() {
 
       <h2 className='main-heading'>Topological Sort Visualizer</h2>
       <div className="graph-container">
-        <GraphComponent graph={graph} indegrees={indegrees} />
+        <GraphComponent graph={graph} indegrees={indegrees} highlightedNode={highlightedNode} highlightedEdges={highlightedEdges} />
       </div>
       <TopoSortArrayComponent topoSort={topoSort} />
       <QuestionComponent onNodeSelect={handleNodeSelection} nodes={Object.keys(indegrees)} />
