@@ -14,7 +14,9 @@ const graphDataFormatter = (graph, indegrees, highlightedNode, highlightedEdges)
     graph[source].map(target => ({
       source: source.toString(),  // Ensure source is a string
       target: target.toString(),   // Ensure target is a string
-      color: highlightedEdges.includes(target) ? 'red' : 'lightblue',
+      color: (highlightedNode === source && highlightedEdges.includes(target))
+        ? 'red'  // Only highlight edges connected to the selected node
+        : 'lightblue',
     }))
   );
 
