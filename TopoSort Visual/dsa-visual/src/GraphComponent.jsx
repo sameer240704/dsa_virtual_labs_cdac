@@ -23,7 +23,7 @@ const graphDataFormatter = (graph, indegrees, highlightedNode, highlightedEdges)
   return { nodes, links };
 };
 
-function GraphComponent({ graph, indegrees, highlightedNode, highlightedEdges }) {
+function GraphComponent({ graph, indegrees, highlightedNode, highlightedEdges, onNodeClick }) {
   const graphData = graphDataFormatter(graph, indegrees, highlightedNode, highlightedEdges);
 
   // Graph configuration for react-d3-graph
@@ -51,6 +51,9 @@ function GraphComponent({ graph, indegrees, highlightedNode, highlightedEdges })
     automaticRearrangeAfterDropNode: true,
   };
   
+  const handleNodeClick = (nodeId) => {
+    onNodeClick(nodeId); // Notify the parent component about the click
+  };
 
   return (
     <div className='inner-container'>
@@ -58,6 +61,7 @@ function GraphComponent({ graph, indegrees, highlightedNode, highlightedEdges })
         id="graph-id"
         data={graphData}
         config={config}
+        onClickNode={handleNodeClick}
       />
     </div>
   );
