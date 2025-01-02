@@ -13,12 +13,12 @@
 
 // export default TopoSortArrayComponent;
 
-import React from 'react';
+import React from "react";
 
 function TopoSortArrayComponent({ topoSort }) {
   return (
-    <div className="topo-sort-container">
-      <h3>Topological Sort Result</h3>
+    <div className="mt-2">
+      <h3 className="text-xl font-semibold">Topological Sort Result</h3>
       <div className="topo-sort-graph">
         {topoSort.length === 0 ? (
           <p>No nodes added yet</p>
