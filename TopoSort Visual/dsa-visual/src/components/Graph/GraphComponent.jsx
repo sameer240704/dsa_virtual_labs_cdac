@@ -1,30 +1,19 @@
 import React from "react";
-import { Graph } from "react-d3-graph";
-import "../../styles/style.css";
+import ForceGraph2D from "react-force-graph-2d";
 
-// Convert graph data to react-d3-graph format
-const graphDataFormatter = (
-  graph,
-  indegrees,
-  highlightedNode,
-  highlightedEdges
-) => {
+const graphDataFormatter = (graph, indegrees, highlightedNode, highlightedEdges) => {
   const nodes = Object.keys(graph).map((node) => ({
-    id: node.toString(), // Ensure the ID is a string
-    key: node.toString(),
-    label: `Node ${node} (Indegree: ${indegrees[node]})`,
+    id: node.toString(),
+    label: `Node ${node} (Indegree: ${indegrees[node] || 0})`,
     color: highlightedNode === node ? "red" : "lightblue",
   }));
 
   const links = Object.keys(graph).flatMap((source) =>
-    graph[source].map((target) => ({
-      source: source.toString(), // Ensure source is a string
-      target: target.toString(), // Ensure target is a string
-      color:
-        highlightedNode === source && highlightedEdges.includes(target)
-          ? "red" // Only highlight edges connected to the selected node
-          : "lightblue",
-    }))
+    graph[source]?.map((target) => ({
+      source: source.toString(),
+      target: target.toString(),
+      color: highlightedNode === source && highlightedEdges?.includes(target) ? "red" : "lightblue",
+    })) || []
   );
 
   return { nodes, links };
@@ -37,49 +26,33 @@ function GraphComponent({
   highlightedEdges,
   onNodeClick,
 }) {
-  const graphData = graphDataFormatter(
-    graph,
-    indegrees,
-    highlightedNode,
-    highlightedEdges
-  );
+  const graphData = graphDataFormatter(graph, indegrees, highlightedNode, highlightedEdges);
 
-  // Graph configuration for react-d3-graph
-  const config = {
-    nodeHighlightBehavior: true,
-    node: {
-      color: "lightblue",
-      size: 1000,
-      highlightStrokeColor: "blue",
-      fontSize: "20",
-      highlightFontSize: "20",
-    },
-    link: {
-      highlightColor: "lightblue",
-    },
-    directed: true,
-    height: 450,
-    width: 1000,
-    // Enable automatic graph centering on render
-    d3: {
-      gravity: -200, // This ensures nodes don't overlap
-      linkLength: 150, // Distance between nodes
-    },
-    // Automatically fit graph within the container after each render
-    automaticRearrangeAfterDropNode: true,
-  };
-
-  const handleNodeClick = (nodeId) => {
-    onNodeClick(nodeId); // Notify the parent component about the click
+  const handleNodeClick = (node) => {
+    onNodeClick(node.id); // Notify the parent component about the click
   };
 
   return (
     <div className="inner-container">
-      <Graph
-        id="graph-id"
-        data={graphData}
-        config={config}
-        onClickNode={handleNodeClick}
+      <ForceGraph2D
+        graphData={graphData}
+        nodeAutoColorBy="id"
+        linkDirectionalArrowLength={6}
+        linkDirectionalArrowRelPos={1}
+        linkWidth={(link) => (link.color === "red" ? 2 : 1)}
+        linkColor={(link) => link.color || "lightblue"}
+        nodeCanvasObject={(node, ctx, globalScale) => {
+          const label = node.label;
+          const fontSize = 12 / globalScale;
+          ctx.font = `${fontSize}px Sans-Serif`;
+          ctx.fillStyle = node.color;
+          ctx.beginPath();
+          ctx.arc(node.x, node.y, 5, 0, 2 * Math.PI, false);
+          ctx.fill();
+          ctx.fillStyle = "black";
+          ctx.fillText(label, node.x + 6, node.y + 2);
+        }}
+        onNodeClick={handleNodeClick}
       />
     </div>
   );
