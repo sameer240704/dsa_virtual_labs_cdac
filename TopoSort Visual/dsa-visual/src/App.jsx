@@ -8,15 +8,6 @@ import TheoryModal from "./components/Theory/TheoryModal";
 import GuideLayout from "./components/Guide/GuideLayout";
 import RightSidebar from "./components/Misc/RightSidebar";
 
-// const initialGraph = {
-//   5: [0, 2],
-//   4: [0, 1],
-//   2: [3],
-//   3: [1],
-//   0: [],
-//   1: []
-// };
-
 const initialGraph = {
   0: [],
 };
@@ -118,7 +109,7 @@ function App() {
   };
 
   return (
-    <div className="px-5 py-4 h-screen w-screen relative overflow-hidden flex flex-col items-center">
+    <div className="px-5 py-4 relative overflow-hidden flex flex-col items-center">
       {isModalOpen && <TheoryModal onClose={closeModal} />}
       <div className="px-5 py-2 w-fit rounded-md bg-black/10 backdrop-blur-xl">
         <h2 className="text-3xl font-bold tracking-wide uppercase">

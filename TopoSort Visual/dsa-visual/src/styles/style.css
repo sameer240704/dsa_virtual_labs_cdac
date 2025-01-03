@@ -75,11 +75,20 @@ h3 {
   font-weight: bold;
 }
 
-.inner-container {
+/* .inner-container {
   display: flex;
   justify-content: center;
   align-items: center;
+} */
+
+.inner-container {
+  position: relative;
+  border: 1px solid #ccc;
+  width: 800px;
+  height: 600px;
+  overflow: hidden;
 }
+
 
 .modal-overlay {
   position: fixed;

@@ -1,10 +1,10 @@
-import React from "react";
+import React, { useRef } from "react";
 import ForceGraph2D from "react-force-graph-2d";
 
 const graphDataFormatter = (graph, indegrees, highlightedNode, highlightedEdges) => {
   const nodes = Object.keys(graph).map((node) => ({
     id: node.toString(),
-    label: `Node ${node} (Indegree: ${indegrees[node] || 0})`,
+    label: `${node}`,
     color: highlightedNode === node ? "red" : "lightblue",
   }));
 
@@ -43,7 +43,7 @@ function GraphComponent({
         linkColor={(link) => link.color || "lightblue"}
         nodeCanvasObject={(node, ctx, globalScale) => {
           const label = node.label;
-          const fontSize = 12 / globalScale;
+          const fontSize = 14 / globalScale;
           ctx.font = `${fontSize}px Sans-Serif`;
           ctx.fillStyle = node.color;
           ctx.beginPath();
@@ -53,6 +53,18 @@ function GraphComponent({
           ctx.fillText(label, node.x + 6, node.y + 2);
         }}
         onNodeClick={handleNodeClick}
+        d3VelocityDecay={0.9} // Higher value to reduce node movement
+        d3AlphaDecay={0.02}  // Ensures the graph stabilizes quickly
+        d3Force={(forceGraph) => {
+          // Add collision avoidance
+          forceGraph.force("collide", d3.forceCollide(30));
+          // Reduce overall graph movement by weakening link force
+          forceGraph.force("link").strength(0.1);
+          // Damp down movement with weak center force
+          forceGraph.force("center").strength(0.2);
+        }}
+        cooldownTicks={100} // Stops the simulation after 100 ticks
+        //onEngineStop={(forceGraph) => forceGraph.zoom(1)}
       />
     </div>
   );
